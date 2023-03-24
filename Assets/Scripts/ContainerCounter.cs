@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 public class ContainerCounter : BaseCounter
 {
-    [SerializeField] private KithcenObjectSO kithcenObjectSO;
+    [SerializeField] private KitchenObjectSo kitchenObjectSo;
 
     public event EventHandler OnPlayGrabbedObject;
 
@@ -14,7 +14,7 @@ public class ContainerCounter : BaseCounter
     {
         if (!player.HasKitchenObject())
         {// Player is not carrying anything
-            KitchenObject.SpawnKitchenObject(kithcenObjectSO, player);
+            KitchenObject.SpawnKitchenObject(kitchenObjectSo, player);
             
             OnPlayGrabbedObject?.Invoke(this, EventArgs.Empty);
         }

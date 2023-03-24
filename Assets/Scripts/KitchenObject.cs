@@ -2,12 +2,12 @@ using UnityEngine;
 
 public class KitchenObject : MonoBehaviour
 {
-    [SerializeField] private KithcenObjectSO kitchenObjectSO;
+    [SerializeField] private KitchenObjectSo kitchenObjectSO;
 
      private IKitchenObjectParent kitchenObjectParent;
 
 
-    public KithcenObjectSO GetKitchenObjectSO()
+    public KitchenObjectSo GetKitchenObjectSO()
     {
         return kitchenObjectSO;
     }
@@ -38,7 +38,7 @@ public class KitchenObject : MonoBehaviour
         Destroy(gameObject);
     }
 
-    public static KitchenObject SpawnKitchenObject(KithcenObjectSO kitchenObjectSo, IKitchenObjectParent kitchenObjectParent)
+    public static KitchenObject SpawnKitchenObject(KitchenObjectSo kitchenObjectSo, IKitchenObjectParent kitchenObjectParent)
     {
         
         Transform kitchenObjectTransform = Instantiate(kitchenObjectSo.prefab);
