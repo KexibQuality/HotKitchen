@@ -5,6 +5,12 @@ using UnityEngine;
 
 public class PlateKitchenObject : KitchenObject
 {
+    public event EventHandler<OnIngredientAddedEventArgs> OnIngredientAdded;
+    public class OnIngredientAddedEventArgs : EventArgs
+    {
+        public KitchenObjectSo kitchenObjectSo;
+    }
+
     [SerializeField] private List<KitchenObjectSo> validKitchenObjectSOList;
     private List<KitchenObjectSo> kitchenObjectSoList;
 
@@ -20,13 +26,18 @@ public class PlateKitchenObject : KitchenObject
             //Not a valid ingredient
             return false;
         }
+
         if (kitchenObjectSoList.Contains(kitchenObjectSo))
         {
             //already has this type 
             return false;
         }
-        kitchenObjectSoList.Add(kitchenObjectSo);
-        return true;
 
+        kitchenObjectSoList.Add(kitchenObjectSo);
+        OnIngredientAdded?.Invoke(this, new OnIngredientAddedEventArgs
+        {
+            kitchenObjectSo = kitchenObjectSo
+        });
+        return true;
     }
 }
