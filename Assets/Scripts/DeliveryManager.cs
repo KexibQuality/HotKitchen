@@ -6,6 +6,9 @@ using Random = UnityEngine.Random;
 
 public class DeliveryManager : MonoBehaviour
 {
+
+    public event EventHandler OnRecipeSpawned;
+    public event EventHandler OnRecipeCompleted;
     public static DeliveryManager Instance { get; private set; }
 
         [SerializeField] private RecipeListSO recipeListSo;
@@ -18,9 +21,6 @@ public class DeliveryManager : MonoBehaviour
     private void Awake()
     {
         Instance = this;
-        
-        
-        
         waitingRecipeSOList = new List<RecipeSO>();
     }
 
@@ -33,28 +33,29 @@ public class DeliveryManager : MonoBehaviour
 
             if (waitingRecipeSOList.Count < waitingRecipeMax)
             {
-                RecipeSO waitingRecipeSO = recipeListSo.recipeSoList[Random.Range(0, recipeListSo.recipeSoList.Count)];
-                Debug.Log(waitingRecipeSO.name);
+                RecipeSO waitingRecipeSO = recipeListSo.recipeSoList[UnityEngine.Random.Range(0, recipeListSo.recipeSoList.Count)];
                 waitingRecipeSOList.Add(waitingRecipeSO);
+                OnRecipeSpawned?.Invoke(this,EventArgs.Empty);
             }
         }
     }
 
     public void DeliveryRecipe(PlateKitchenObject plateKitchenObject)
     {
+        
         for (int i = 0; i < waitingRecipeSOList.Count; i++)
         {
             RecipeSO waitingRecipeSo = waitingRecipeSOList[i];
 
             if (waitingRecipeSo.KitchenObjectSoList.Count == plateKitchenObject.GetKitchenObjectSoList().Count)
             {
-                //Has the same number of ingredients
                 bool plateContainsMathcesRecipe = true;
-
+                bool ingredientFound = false;
+                //Has the same number of ingredients
+               
                 foreach (KitchenObjectSo recipeKitchenObjectSO in waitingRecipeSo.KitchenObjectSoList)
                 {
                     // Cycling through all ingredients in the recipe
-                    bool ingredientFound = false;
 
                     foreach (KitchenObjectSo plateKitchenObjectSO in plateKitchenObject.GetKitchenObjectSoList())
                     {
@@ -77,7 +78,7 @@ public class DeliveryManager : MonoBehaviour
                 if (plateContainsMathcesRecipe)
                 {
                     //Player delivered the correct recipe!
-                    Debug.Log("Player delivered the correct recipe!");
+                    OnRecipeCompleted?.Invoke(this,EventArgs.Empty);
                     waitingRecipeSOList.RemoveAt(i);
                     return;
                 }
@@ -85,6 +86,9 @@ public class DeliveryManager : MonoBehaviour
         }
         // No matches found!
         // Player did not deliver a correct recipe!
-        Debug.Log("Player did not deliver a correct recipe!");
+    }
+    public List<RecipeSO> GetWaitingRecipeSOList()
+    {
+        return waitingRecipeSOList;
     }
 }
