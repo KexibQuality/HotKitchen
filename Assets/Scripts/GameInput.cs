@@ -28,6 +28,8 @@ public class GameInput : MonoBehaviour
     public event EventHandler OnInteractAlternateAction;
     public event EventHandler OnPauseAction;
 
+    public event EventHandler OnBindingRebind;
+
     private void Awake()
     {
         Instance = this;
@@ -87,25 +89,18 @@ public class GameInput : MonoBehaviour
             default:
             case Binding.Move_Up:
                 return _playerInputActions.Player.Move.bindings[1].ToDisplayString();
-                break;
             case Binding.Move_Down:
                 return _playerInputActions.Player.Move.bindings[2].ToDisplayString();
-                break;
             case Binding.Move_Left:
                 return _playerInputActions.Player.Move.bindings[3].ToDisplayString();
-                break;
             case Binding.Move_Right:
                 return _playerInputActions.Player.Move.bindings[4].ToDisplayString();
-                break;
             case Binding.Interact:
                 return _playerInputActions.Player.Interact.bindings[0].ToDisplayString();
-                break;
             case Binding.InteractAlternate:
                 return _playerInputActions.Player.InteractAlternate.bindings[0].ToDisplayString();
-                break;
             case Binding.Pause:
                 return _playerInputActions.Player.Pause.bindings[0].ToDisplayString();
-                break;
         }
     }
 
@@ -154,6 +149,8 @@ public class GameInput : MonoBehaviour
                 onActionRebound(); 
                 PlayerPrefs.SetString(PLAYER_PREFS_BINDINGS,_playerInputActions.SaveBindingOverridesAsJson());
                 PlayerPrefs.Save();
+                
+                OnBindingRebind?.Invoke(this,EventArgs.Empty);
             })
             .Start();
     }
